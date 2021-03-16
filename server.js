@@ -198,6 +198,9 @@ router.route('/reviews')
                 }
             })
         }
+    })
+    .all (function (req, res) {
+        return res.status(403).json({success: false, message: "This HTTP method is not supported. Only GET and POST are supported."});
     });
 
 router.all('/', function (req, res) {

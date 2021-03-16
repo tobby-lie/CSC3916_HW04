@@ -165,40 +165,40 @@ router.route('/reviews')
         {
             return res.json({ success: false, message: 'Please include all information for small quote, rating, and title to query.'});
         }
-        // else {
-        //     var review = new Review();
-        //
-        //     // retrieve authorization from authorization header and remove first 4 characters to get just the token
-        //     jwt.verify(req.headers.authorization.substring(4), process.env.SECRET_KEY, function(err, ver_res) {
-        //         if (err)
-        //         {
-        //             return res.status(403).json({success: false, message: "Unable to post review passed in."});
-        //         } else {
-        //             review.user_id = ver_res.id;
-        //
-        //             Movie.findOne({title: req.body.title}, function(err, movie) {
-        //                 if (err) {
-        //                     return res.status(403).json({success: false, message: "Unable to post review for title passed in"});
-        //                 } else if (!movie) {
-        //                     return res.status(403).json({success: false, message: "Unable to find title to post review for."});
-        //                 } else {
-        //                     review.movie_id = movie._id;
-        //                     review.username = ver_res.username;
-        //                     review.small_quote = req.body.small_quote;
-        //                     review.rating = req.body.rating;
-        //
-        //                     review.save (function (err) {
-        //                         if (err) {
-        //                             return res.status(403).json({success: false, message: "Unable to post review for title passed in."});
-        //                         } else {
-        //                             return res.status(200).json({success: true, message: "Successfully posted review for title passed in."});
-        //                         }
-        //                     })
-        //                 }
-        //             })
-        //         }
-        //     })
-        // }
+        else {
+            var review = new Review();
+
+            // retrieve authorization from authorization header and remove first 4 characters to get just the token
+            jwt.verify(req.headers.authorization.substring(4), process.env.SECRET_KEY, function(err, ver_res) {
+                if (err)
+                {
+                    return res.status(403).json({success: false, message: "Unable to post review passed in."});
+                } else {
+                    review.user_id = ver_res.id;
+
+                    Movie.findOne({title: req.body.title}, function(err, movie) {
+                        if (err) {
+                            return res.status(403).json({success: false, message: "Unable to post review for title passed in"});
+                        } else if (!movie) {
+                            return res.status(403).json({success: false, message: "Unable to find title to post review for."});
+                        } else {
+                            review.movie_id = movie._id;
+                            review.username = ver_res.username;
+                            review.small_quote = req.body.small_quote;
+                            review.rating = req.body.rating;
+
+                            review.save (function (err) {
+                                if (err) {
+                                    return res.status(403).json({success: false, message: "Unable to post review for title passed in."});
+                                } else {
+                                    return res.status(200).json({success: true, message: "Successfully posted review for title passed in."});
+                                }
+                            })
+                        }
+                    })
+                }
+            })
+        }
     })
     .all (function (req, res) {
         return res.status(403).json({success: false, message: "This HTTP method is not supported. Only GET and POST are supported."});

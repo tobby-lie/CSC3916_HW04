@@ -200,6 +200,22 @@ router.route('/reviews')
             })
         }
     })
+    .get(authJwtController.isAuthenticated, function (req, res) {
+        if (!req.body.username) {
+            return res.json({ success: false, message: "Please provide a username to retrieve their reviews." });
+        } else {
+            Review.find( req.body.username).select("small_quote rating").exec(function (err, movie) {
+                if (err) {
+                    return res.status(403).json({success: false, message: "Unable to retrieve reviews for username passed in."});
+                }
+                if (movie && movie.length > 0) {
+                    return res.status(200).json({success: true, message: "Successfully retrieved reviews for username passed in.", movie: movie});
+                } else {
+                    return res.status(404).json({success: false, message: "Unable to retrieve a match for reviews for username passed in."});
+                }
+            })
+        }
+    })
     .all (function (req, res) {
         return res.status(403).json({success: false, message: "This HTTP method is not supported. Only GET and POST are supported."});
     });

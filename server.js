@@ -9,6 +9,7 @@ var cors = require('cors');
 var User = require('./Users');
 var Movie = require('./Movies');
 var Review = require('./Reviews');
+var mongoose = require('mongoose');
 
 var app = express();
 app.use(cors());
@@ -200,24 +201,35 @@ router.route('/reviews')
             })
         }
     })
+    .all (function (req, res) {
+        return res.status(403).json({success: false, message: "This HTTP method is not supported. Only POST is supported."});
+    });
+
+router.route('/movies/:movie_title')
     .get(authJwtController.isAuthenticated, function (req, res) {
-        if (!req.body.username) {
-            return res.json({ success: false, message: "Please provide a username to retrieve their reviews." });
-        } else {
-            Review.find( req.body.username).select("small_quote rating").exec(function (err, movie) {
+        if (req.query && req.query.reviews && req.query.reviews == "true") {
+
+            Movie.findOne({title: req.params.movie_title}, function(err, movie) {
                 if (err) {
-                    return res.status(403).json({success: false, message: "Unable to retrieve reviews for username passed in."});
-                }
-                if (movie && movie.length > 0) {
-                    return res.status(200).json({success: true, message: "Successfully retrieved reviews for username passed in.", movie: movie});
+                    return res.status(403).json({success: false, message: "Unable to get reviews for title passed in"});
+                } else if (!movie) {
+                    return res.status(403).json({success: false, message: "Unable to find title to post review for."});
                 } else {
-                    return res.status(404).json({success: false, message: "Unable to retrieve a match for reviews for username passed in."});
+
+                    Movie.aggregate()
+                        .match({_id: mongoose.Types.ObjectId(movie._id)})
+                        .lookup({from: 'reviews', localField: '_id', foreignField: 'movie_id', as: 'reviews'})
+                        .exec (function(err, result) {
+                            if (err) {
+                                return res.status(403).json({success: false, message: "The movie title parameter was not found."});
+                            } else {
+                                return res.status(200).json({success: true, message: "Movie title passed in was found.", movie: movie});
+                            }
+                        })
+
                 }
             })
         }
-    })
-    .all (function (req, res) {
-        return res.status(403).json({success: false, message: "This HTTP method is not supported. Only GET and POST are supported."});
     });
 
 router.all('/', function (req, res) {

@@ -25,11 +25,11 @@ var router = express.Router();
 const GA_TRACKING_ID = process.env.GA_KEY;
 
 function trackDimension(category, action, label, value, dimension, metric) {
-    var options = {method: 'GET',
+
+    var options = { method: 'GET',
         url: 'https://www.google-analytics.com/collect',
         qs:
-            {
-                // API Version.
+            {   // API Version.
                 v: '1',
                 // Tracking ID / Property ID.
                 tid: GA_TRACKING_ID,
@@ -38,7 +38,7 @@ function trackDimension(category, action, label, value, dimension, metric) {
                 cid: crypto.randomBytes(16).toString("hex"),
                 // Event hit type.
                 t: 'event',
-                // Event category,
+                // Event category.
                 ec: category,
                 // Event action.
                 ea: action,
@@ -52,7 +52,8 @@ function trackDimension(category, action, label, value, dimension, metric) {
                 cm1: metric
             },
         headers:
-            { 'Cache-Control': 'no-cache' } };
+            {  'Cache-Control': 'no-cache' } };
+
     return rp(options);
 }
 

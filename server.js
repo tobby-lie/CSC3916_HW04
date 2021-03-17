@@ -11,6 +11,7 @@ var Movie = require('./Movies');
 var Review = require('./Reviews');
 var mongoose = require('mongoose');
 var rp = require('request-promise');
+const crypto = require("crypto");
 
 var app = express();
 app.use(cors());

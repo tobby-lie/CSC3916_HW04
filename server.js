@@ -142,7 +142,10 @@ router.route('/movies/:movie_title')
                         })
 
                 }
-                trackDimension(movie.genre, '/movies/:movie_title', 'GET Movie', '1', movie.title, "1");
+                trackDimension(movie.genre, '/movies/:movie_title', 'GET Movie', '1', movie.title, "1")
+                    .then(function(response) {
+                        console.log(response.body);
+                    })
             })
         } else {
             Movie.find({title: req.params.movie_title}).select("title year_released genre actors").exec(function (err, movie) {

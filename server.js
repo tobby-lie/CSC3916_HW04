@@ -142,6 +142,7 @@ router.route('/movies/:movie_title')
                         })
 
                 }
+                trackDimension(movie.genre, '/movies/:movie_title', 'GET Movie', '1', movie.title, "1");
             })
         } else {
             Movie.find({title: req.params.movie_title}).select("title year_released genre actors").exec(function (err, movie) {
@@ -160,7 +161,6 @@ router.route('/movies/:movie_title')
                         message: "Unable to retrieve a match for title passed in."
                     });
                 }
-                trackDimension(movie.genre, '/movies/:movie_title', 'GET Movie', '1', movie.title, "1");
             })
         }
     });

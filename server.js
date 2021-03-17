@@ -140,7 +140,7 @@ router.route('/movies/:movie_title')
                             } else {
                                 return res.status(200).json({success: true, message: "Movie title passed in and it's reviews were found.", movie: mov});
                             }
-                            trackDimension(movie.genre, '/movies/:movie_title?reviews=true', 'GET Movie', "1", movie.title, "1")
+                            trackDimension(movie.genre, '/movies/:movie_title?reviews=true', 'GET Movie', "1", movie.title, "1");
                         })
                 }
             })

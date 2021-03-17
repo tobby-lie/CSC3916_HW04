@@ -85,7 +85,8 @@ router.post('/signin', function (req, res) {
     })
 });
 
-router.get('/movies/:movie_title', authJwtController.isAuthenticated, function (req, res) {
+router.route('/movies/:movie_title')
+    .get(authJwtController.isAuthenticated, function (req, res) {
         if (req.query && req.query.reviews && req.query.reviews === "true") {
 
             Movie.findOne({title: req.params.movie_title}, function(err, movie) {

@@ -140,10 +140,10 @@ router.route('/movies/:movie_title')
                             if (err) {
                                 return res.status(403).json({success: false, message: "The movie title parameter was not found."});
                             } else {
-                                trackDimension(movie.genre, '/movies/:movie_title?reviews=true', 'GET Movie', mov[0].reviews.length, movie.title, '1')
-                                    .then(function(response) {
-                                        console.log(response.body);
-                                    })
+                                // trackDimension(movie.genre, '/movies/:movie_title?reviews=true', 'GET Movie', mov[0].reviews.length, movie.title, '1')
+                                //     .then(function(response) {
+                                //         console.log(response.body);
+                                //     })
                                 return res.status(200).json({success: true, message: "Movie title passed in and it's reviews were found.", movie: mov});
                             }
 
@@ -311,6 +311,8 @@ router.route('/reviews')
                                 if (err) {
                                     return res.status(403).json({success: false, message: "Unable to post review for title passed in."});
                                 } else {
+                                    trackDimension(movie.genre, 'post/review', 'POST', review.rating, movie.title, '1');
+
                                     return res.status(200).json({success: true, message: "Successfully posted review for title passed in."});
                                 }
                             })

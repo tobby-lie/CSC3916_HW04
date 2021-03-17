@@ -99,11 +99,11 @@ router.route('/movies/:movie_title')
                     Movie.aggregate()
                         .match({_id: mongoose.Types.ObjectId(movie._id)})
                         .lookup({from: 'reviews', localField: '_id', foreignField: 'movie_id', as: 'reviews'})
-                        .exec (function(err, result) {
+                        .exec (function(err, mov) {
                             if (err) {
                                 return res.status(403).json({success: false, message: "The movie title parameter was not found."});
                             } else {
-                                return res.status(200).json({success: true, message: "Movie title passed in was found.", movie: movie});
+                                return res.status(200).json({success: true, message: "Movie title passed in was found.", movie: mov});
                             }
                         })
 

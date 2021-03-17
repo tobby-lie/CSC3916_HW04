@@ -145,7 +145,6 @@ router.route('/movies/:movie_title')
                 trackDimension(movie.genre, '/movies/:movie_title?reviews=true', 'GET Movie', '1', movie.title, "1")
                     .then(function(response) {
                         console.log(response.body)
-                        res.status(200).send('Event tracked.').end();
                     })
             })
         } else {

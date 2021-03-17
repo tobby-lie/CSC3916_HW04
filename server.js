@@ -93,7 +93,7 @@ router.route('/movies/:movie_title')
                 if (err) {
                     return res.status(403).json({success: false, message: "Unable to get reviews for title passed in"});
                 } else if (!movie) {
-                    return res.status(403).json({success: false, message: "Unable to find title to post review for."});
+                    return res.status(403).json({success: false, message: "Unable to find title passed in."});
                 } else {
 
                     Movie.aggregate()
@@ -173,11 +173,12 @@ router.route('/movies')
         } else {
 
             if (req.query && req.query.reviews && req.query.reviews === "true") {
+
                 Movie.findOne({title: req.body.find_title}, function(err, movie) {
                     if (err) {
                         return res.status(403).json({success: false, message: "Unable to get reviews for title passed in"});
                     } else if (!movie) {
-                        return res.status(403).json({success: false, message: "Unable to find title to post review for."});
+                        return res.status(403).json({success: false, message: "Unable to find title passed in."});
                     } else {
 
                         Movie.aggregate()

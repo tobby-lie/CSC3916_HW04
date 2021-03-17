@@ -87,27 +87,27 @@ router.post('/signin', function (req, res) {
 
 router.get('/movies/:movie_title', authJwtController.isAuthenticated, function (req, res) {
         if (req.query && req.query.reviews && req.query.reviews === "true") {
-            return res.status(200).json({success: true, message: "Movie title passed in was found.", movie: movie});
-            // Movie.findOne({title: req.params.movie_title}, function(err, movie) {
-            //     if (err) {
-            //         return res.status(403).json({success: false, message: "Unable to get reviews for title passed in"});
-            //     } else if (!movie) {
-            //         return res.status(403).json({success: false, message: "Unable to find title to post review for."});
-            //     } else {
-            //
-            //         Movie.aggregate()
-            //             .match({_id: mongoose.Types.ObjectId(movie._id)})
-            //             .lookup({from: 'reviews', localField: '_id', foreignField: 'movie_id', as: 'reviews'})
-            //             .exec (function(err, result) {
-            //                 if (err) {
-            //                     return res.status(403).json({success: false, message: "The movie title parameter was not found."});
-            //                 } else {
-            //                     return res.status(200).json({success: true, message: "Movie title passed in was found.", movie: movie});
-            //                 }
-            //             })
-            //
-            //     }
-            // })
+
+            Movie.findOne({title: req.params.movie_title}, function(err, movie) {
+                if (err) {
+                    return res.status(403).json({success: false, message: "Unable to get reviews for title passed in"});
+                } else if (!movie) {
+                    return res.status(403).json({success: false, message: "Unable to find title to post review for."});
+                } else {
+
+                    Movie.aggregate()
+                        .match({_id: mongoose.Types.ObjectId(movie._id)})
+                        .lookup({from: 'reviews', localField: '_id', foreignField: 'movie_id', as: 'reviews'})
+                        .exec (function(err, result) {
+                            if (err) {
+                                return res.status(403).json({success: false, message: "The movie title parameter was not found."});
+                            } else {
+                                return res.status(200).json({success: true, message: "Movie title passed in was found.", movie: movie});
+                            }
+                        })
+
+                }
+            })
         }
     });
 

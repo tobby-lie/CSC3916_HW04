@@ -139,13 +139,12 @@ router.route('/movies/:movie_title')
                             } else {
                                 return res.status(200).json({success: true, message: "Movie title passed in and it's reviews were found.", movie: mov});
                             }
+                            trackDimension(movie.genre, '/movies/:movie_title?reviews=true', 'GET Movie', "1", movie.title, "1")
+                                .then(function(response) {
+                                    console.log(response.body);
+                                })
                         })
-
                 }
-                trackDimension(movie.genre, '/movies/:movie_title?reviews=true', 'GET Movie', '1', movie.title, "1")
-                    .then(function(response) {
-                        console.log(response.body)
-                    })
             })
         } else {
             Movie.find({title: req.params.movie_title}).select("title year_released genre actors").exec(function (err, movie) {

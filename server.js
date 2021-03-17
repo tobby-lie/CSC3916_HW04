@@ -329,13 +329,14 @@ router.all('/', function (req, res) {
 });
 
 router.route('/test')
-    .get(function(req, res) {
-        trackDimension('Feedback', 'Rating', 'Feedback for movie', '5', 'guardians of the galaxy 2', '1')
-            .then(function(response) {
+    .get(function (req, res) {
+        // Event value must be numeric.
+        trackDimension('Feedback', 'Rating', 'Feedback for Movie', '3', 'Guardian\'s of the Galaxy 2', '1')
+            .then(function (response) {
                 console.log(response.body);
                 res.status(200).send('Event tracked.').end();
             })
-    })
+    });
 
 app.use('/', router);
 app.listen(process.env.PORT || 8080);

@@ -139,9 +139,11 @@ router.route('/movies/:movie_title')
                             if (err) {
                                 return res.status(403).json({success: false, message: "The movie title parameter was not found."});
                             } else {
+                                trackDimension(movie.genre, '/movies/:movie_title?reviews=true', 'GET Movie', "1", movie.title, "1");
+
                                 return res.status(200).json({success: true, message: "Movie title passed in and it's reviews were found.", movie: mov});
                             }
-                            trackDimension(movie.genre, '/movies/:movie_title?reviews=true', 'GET Movie', "1", movie.title, "1");
+
                         })
                 }
             })
@@ -162,6 +164,7 @@ router.route('/movies/:movie_title')
                         message: "Unable to retrieve a match for title passed in."
                     });
                 }
+
             })
         }
     });

@@ -309,7 +309,7 @@ router.route('/reviews')
                                 } else {
                                     trackDimension(movie.genre, 'post/review', 'POST', review.rating, movie.title, '1');
 
-                                    return res.status(200).json({success: true, message: "Successfully posted review for title passed in."});
+                                    return res.status(200).json({success: true, message: "Successfully posted review for title passed in.", movie: movie});
                                 }
                             })
                         }

@@ -10,6 +10,7 @@ var User = require('./Users');
 var Movie = require('./Movies');
 var Review = require('./Reviews');
 var mongoose = require('mongoose');
+var rp = require('request-promise');
 
 var app = express();
 app.use(cors());
@@ -140,9 +141,6 @@ router.route('/movies/:movie_title')
                                 return res.status(200).json({success: true, message: "Movie title passed in and it's reviews were found.", movie: mov});
                             }
                             trackDimension(movie.genre, '/movies/:movie_title?reviews=true', 'GET Movie', "1", movie.title, "1")
-                                .then(function(response) {
-                                    console.log(response.body);
-                                })
                         })
                 }
             })

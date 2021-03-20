@@ -136,6 +136,7 @@ router.route('/movies/:movie_title')
                     Movie.aggregate()
                         .match({_id: mongoose.Types.ObjectId(movie._id)})
                         .lookup({from: 'reviews', localField: '_id', foreignField: 'movie_id', as: 'reviews'})
+                        .addFields({averaged_rating: {$avg: "$reviews.rating"}})
                         .exec (function(err, mov) {
                             if (err) {
                                 return res.status(403).json({success: false, message: "The movie title parameter was not found."});
@@ -240,6 +241,7 @@ router.route('/movies')
                         Movie.aggregate()
                             .match({_id: mongoose.Types.ObjectId(movie._id)})
                             .lookup({from: 'reviews', localField: '_id', foreignField: 'movie_id', as: 'reviews'})
+                            .addFields({averaged_rating: {$avg: "$reviews.rating"}})
                             .exec (function(err, mov) {
                                 if (err) {
                                     return res.status(403).json({success: false, message: "The movie title parameter was not found."});

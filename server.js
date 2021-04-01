@@ -253,22 +253,27 @@ router.route('/movies')
                 })
             }
             else {
-                Movie.find(req.body.find_title).select("title year_released genre actors").exec(function (err, movie) {
-                    if (err) {
-                        return res.status(403).json({success: false, message: "Unable to retrieve title passed in."});
-                    }
-                    if (movie && movie.length > 0) {
-                        return res.status(200).json({
-                            success: true,
-                            message: "Successfully retrieved movie.",
-                            movie: movie
-                        });
-                    } else {
-                        return res.status(404).json({
-                            success: false,
-                            message: "Unable to retrieve a match for title passed in."
-                        });
-                    }
+                // Movie.find(req.body.find_title).select("title year_released genre actors").exec(function (err, movie) {
+                //     if (err) {
+                //         return res.status(403).json({success: false, message: "Unable to retrieve title passed in."});
+                //     }
+                //     if (movie && movie.length > 0) {
+                //         return res.status(200).json({
+                //             success: true,
+                //             message: "Successfully retrieved movie.",
+                //             movie: movie
+                //         });
+                //     } else {
+                //         return res.status(404).json({
+                //             success: false,
+                //             message: "Unable to retrieve a match for title passed in."
+                //         });
+                //     }
+                // })
+                Movie.find(function(err, movies) {
+                    if (err) res.send(err);
+
+                    res.json(movies).status(200).end();
                 })
             }
         }

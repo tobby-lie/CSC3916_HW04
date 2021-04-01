@@ -225,57 +225,61 @@ router.route('/movies')
         }
     })
     .get(authJwtController.isAuthenticated, function (req, res) {
-        if (!req.body.find_title) {
-            return res.json({ success: false, message: "Please provide a title to be retrieved." });
-        } else {
 
-            if (req.query && req.query.reviews && req.query.reviews === "true") {
+        if (req.query && req.query.reviews && req.query.reviews === "true") {
 
-                Movie.findOne(req.body.find_title, function(err, movie) {
-                    if (err) {
-                        return res.status(403).json({success: false, message: "Unable to get reviews for title passed in"});
-                    } else if (!movie) {
-                        return res.status(403).json({success: false, message: "Unable to find title passed in."});
-                    } else {
+            Movie.find(function (err, movies) {
+                if (err) {
+                    return res.status(403).json({success: false, message: "Unable to get reviews for titles"});
+                } else if (!movies) {
+                    return res.status(403).json({success: false, message: "Unable to find titles"});
+                } else {
 
-                        Movie.aggregate()
-                            // .match({_id: mongoose.Types.ObjectId(movie._id)})
-                            .lookup({from: 'reviews', localField: '_id', foreignField: 'movie_id', as: 'reviews'})
-                            .addFields({averaged_rating: {$avg: "$reviews.rating"}})
-                            .exec (function(err, mov) {
-                                if (err) {
-                                    return res.status(403).json({success: false, message: "The movie title parameter was not found."});
-                                } else {
-                                    return res.status(200).json({success: true, message: "Movie title passed in and it's reviews were found.", movie: mov});
-                                }
-                            })
-                    }
-                })
-            }
-            else {
-                // Movie.find(req.body.find_title).select("title year_released genre actors").exec(function (err, movie) {
-                //     if (err) {
-                //         return res.status(403).json({success: false, message: "Unable to retrieve title passed in."});
-                //     }
-                //     if (movie && movie.length > 0) {
-                //         return res.status(200).json({
-                //             success: true,
-                //             message: "Successfully retrieved movie.",
-                //             movie: movie
-                //         });
-                //     } else {
-                //         return res.status(404).json({
-                //             success: false,
-                //             message: "Unable to retrieve a match for title passed in."
-                //         });
-                //     }
-                // })
-                Movie.find(function(err, movies) {
-                    if (err) res.send(err);
+                    Movie.aggregate()
+                        // .match({_id: mongoose.Types.ObjectId(movie._id)})
+                        .lookup({from: 'reviews', localField: '_id', foreignField: 'movie_id', as: 'reviews'})
+                        .addFields({averaged_rating: {$avg: "$reviews.rating"}})
+                        .exec(function (err, mov) {
+                            if (err) {
+                                return res.status(403).json({
+                                    success: false,
+                                    message: "The movie title parameter was not found."
+                                });
+                            } else {
+                                return res.status(200).json({
+                                    success: true,
+                                    message: "Movie title passed in and it's reviews were found.",
+                                    movie: mov
+                                });
+                            }
+                        })
+                }
+            })
+        }
 
-                    res.json(movies).status(200).end();
-                })
-            }
+        else {
+            // Movie.find(req.body.find_title).select("title year_released genre actors").exec(function (err, movie) {
+            //     if (err) {
+            //         return res.status(403).json({success: false, message: "Unable to retrieve title passed in."});
+            //     }
+            //     if (movie && movie.length > 0) {
+            //         return res.status(200).json({
+            //             success: true,
+            //             message: "Successfully retrieved movie.",
+            //             movie: movie
+            //         });
+            //     } else {
+            //         return res.status(404).json({
+            //             success: false,
+            //             message: "Unable to retrieve a match for title passed in."
+            //         });
+            //     }
+            // })
+            Movie.find(function(err, movies) {
+                if (err) res.send(err);
+
+                res.json(movies).status(200).end();
+            })
         }
     })
     .all(function(req, res) {

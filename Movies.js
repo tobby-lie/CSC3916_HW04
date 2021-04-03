@@ -28,7 +28,8 @@ var MovieSchema = new Schema({
             { actor_name: { type: String, required: true}, character_name: { type: String, required: true}},
             { actor_name: { type: String, required: true}, character_name: { type: String, required: true}},
             { actor_name: { type: String, required: true}, character_name: { type: String, required: true}}
-        ]
+        ],
+    movieUrl: { type: String }
 });
 
 MovieSchema.pre('save', function(next) {

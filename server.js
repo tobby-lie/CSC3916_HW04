@@ -246,7 +246,7 @@ router.route('/movies')
                                     message: "The movie title parameter was not found."
                                 });
                             } else {
-                                movie.sort((a,b) => { return b.averaged_rating - a.averaged_rating; });
+                                mov.sort((a,b) => { return b.averaged_rating - a.averaged_rating; });
                                 return res.status(200).json({
                                     success: true,
                                     message: "Movie title passed in and it's reviews were found.",

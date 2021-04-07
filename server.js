@@ -175,7 +175,7 @@ router.route('/search/:key_word')
         Movie.find({title: {"$regex": req.params.key_word, "$options":"i"}}, function(err, docs) {
             if (err) {
                 return res.status(403).json({success: false, message: "Unable to get reviews for title passed in"});
-            } else if (!movie) {
+            } else if (!docs) {
                 return res.status(403).json({success: false, message: "Unable to find title passed in."});
             } else {
 

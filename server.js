@@ -169,7 +169,7 @@ router.route('/movies/:movie_title')
         }
     });
 
-router.route('/movies/:key_word')
+router.route('/search/:key_word')
     .get(authJwtController.isAuthenticated, function (req, res) {
 
         Movie.find({title: {$regex: req.params.key_word, $options:"i"}}, function(err, docs) {

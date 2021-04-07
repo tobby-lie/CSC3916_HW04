@@ -172,7 +172,7 @@ router.route('/movies/:movie_title')
 router.route('/search/:key_word')
     .get(authJwtController.isAuthenticated, function (req, res) {
 
-        Movie.find({title: {"$regex": req.params.key_word, "$options":"i"}}, function(err, docs) {
+        Movie.find({"title": {"$regex": req.params.key_word, "$options":"i"}}, function(err, docs) {
             if (err) {
                 return res.status(403).json({success: false, message: "Unable to get reviews for title passed in"});
             } else if (!docs) {

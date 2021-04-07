@@ -175,22 +175,19 @@ router.route('/search/:key_word')
         var searchKey = new RegExp(req.params.key_word, 'i')
         Movie.find({title: req.params.key_word}, function(err, docs) {
             if (err) {
-                return res.status(403).json({success: false, message: "Unable to get reviews for title passed in"});
-            } else if (!docs) {
-                return res.status(403).json({success: false, message: "Unable to find title passed in."});
+                return res.status(403).json({success: false, message: "Unable to retrieve title passed in."});
+            }
+            if (docs && docs.length > 0) {
+                return res.status(200).json({
+                    success: true,
+                    message: "Successfully retrieved movie.",
+                    movie: docs
+                });
             } else {
-                Movie.aggregate()
-                    .match({_id: mongoose.Types.ObjectId(docs._id)})
-                    .lookup({from: 'reviews', localField: '_id', foreignField: 'movie_id', as: 'reviews'})
-                    .addFields({averaged_rating: {$avg: "$reviews.rating"}})
-                    .exec (function(err, mov) {
-                        if (err) {
-                            return res.status(403).json({success: false, message: "The movie title parameter was not found."});
-                        } else {
-                            return res.status(200).json({success: true, message: "Movie title passed in and it's reviews were found.", movie: mov});
-                        }
-
-                    })
+                return res.status(404).json({
+                    success: false,
+                    message: "Unable to retrieve a match for title passed in."
+                });
             }
         })
     });

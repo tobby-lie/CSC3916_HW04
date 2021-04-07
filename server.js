@@ -178,8 +178,18 @@ router.route('/search/:key_word')
             } else if (!docs) {
                 return res.status(403).json({success: false, message: "Unable to find title passed in."});
             } else {
+                Movie.aggregate()
+                    .match({_id: mongoose.Types.ObjectId(docs._id)})
+                    .lookup({from: 'reviews', localField: '_id', foreignField: 'movie_id', as: 'reviews'})
+                    .addFields({averaged_rating: {$avg: "$reviews.rating"}})
+                    .exec (function(err, mov) {
+                        if (err) {
+                            return res.status(403).json({success: false, message: "The movie title parameter was not found."});
+                        } else {
+                            return res.status(200).json({success: true, message: "Movie title passed in and it's reviews were found.", movie: mov});
+                        }
 
-                console.log(docs);
+                    })
             }
         })
     });
